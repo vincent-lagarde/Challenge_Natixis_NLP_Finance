@@ -112,6 +112,32 @@ def text_cleaning(
     return " ".join(corpus_words)
 
 
+def categorical_other(df_cat_column, threshold=0.02, name_cat_rare="other"):
+    """
+    Map the rare categorical variable to 'Other' based on their frequency
+
+    Arguments
+    ---------
+        df_cat_colum: pd.Series
+            Categorical column
+        threshold: float32
+            Threshold of frequency to map to the rare category
+        name_cat_rare: str
+            Name of the rare category
+    Returns
+    -------
+        df_cat_other: pd.Series
+            Modified categorical column
+    """
+    # Frequency of categorical category
+    df_freq = df_cat_column.value_counts(normalize=True)
+    # Replace cat by its frequency
+    df_map = df_cat_column.map(df_freq)
+    # If inferior to threshold -> replace it
+    df_cat_other = df_cat_column.mask(df_map < threshold, name_cat_rare)
+    return df_cat_other
+
+
 def link_texts_series(df_train_series, df_text, id_series, id_text):
     """
     Using the text indices of a time series, concatenate the text
@@ -143,10 +169,13 @@ def link_texts_series(df_train_series, df_text, id_series, id_text):
     # Group By the series and aggregate on specific features (concatenate the text, list of the speakers)
     df_temp = (
         df_temp.groupby(id_series)
-        .agg({"text": lambda x: " ".join(x), "speaker": lambda x: list(x)})
+        .agg({"text_process": lambda x: " ".join(x), "speaker": lambda x: list(x)})
         .reset_index()
         .rename(
-            columns={"text": "text_concat_" + suff, "speaker": "list_speakers_" + suff}
+            columns={
+                "text_process": "text_concat_" + suff,
+                "speaker": "list_speakers_" + suff,
+            }
         )
     )
     return df_temp
@@ -209,14 +238,14 @@ def suppr_footnotes(text):
         pass
 
     ##
-    try:
+    """try:
         txt_list = txt.split(" 1. ", maxsplit=1)
         if len(txt) > 1:
             txt = txt_list[0]
         else:
             1 / 0
     except:
-        pass
+        pass"""
 
     try:
         txt_list = txt.split("SEE ALSO", maxsplit=1)
@@ -228,14 +257,15 @@ def suppr_footnotes(text):
         pass
 
     #
-    try:
+    """try:
         txt_list = txt.split("See also", maxsplit=1)
         if len(txt) > 1:
             txt = txt_list[0]
         else:
             1 / 0
     except:
-        pass
+        pass"""
+
     try:
         txt_list = txt.split("Thank you. ", maxsplit=1)
         if len(txt) > 1:
