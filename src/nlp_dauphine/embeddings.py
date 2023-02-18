@@ -5,15 +5,15 @@ from tqdm import tqdm
 
 
 def vocabulary(corpus, voc_threshold=0):
-    """    
-    Function using word counts to build a vocabulary - can be improved with a second parameter for 
+    """
+    Function using word counts to build a vocabulary - can be improved with a second parameter for
     setting a frequency threshold
     Params:
         corpus (list of list of strings): corpus of sentences
         voc_threshold (int): maximum size of the vocabulary (0 means no limit !)
     Returns:
         vocabulary (dictionary): keys: list of distinct words across the corpus
-                                 values: indexes corresponding to each word sorted by frequency        
+                                 values: indexes corresponding to each word sorted by frequency
     """
     # Setting limits
     voc_threshold = voc_threshold if voc_threshold else int(10e5)
@@ -49,7 +49,7 @@ def co_occurence_matrix(corpus, vocabulary, window=0, distance_weighting=False):
         window (int): size of the context window; when 0, the context is the whole sentence
         distance_weighting (bool): indicates if we use a weight depending on the distance between words for co-oc counts
     Returns:
-        matrix (array of size (len(vocabulary), len(vocabulary))): the co-oc matrix, using the same ordering as the vocabulary given in input    
+        matrix (array of size (len(vocabulary), len(vocabulary))): the co-oc matrix, using the same ordering as the vocabulary given in input
     """
     l = len(vocabulary)
     M = np.zeros((l, l))
@@ -104,16 +104,16 @@ def sentence_representations(texts, vocabulary, embeddings, np_func=np.mean):
     Represent the sentences as a combination of the vector of its words.
     Parameters
     ----------
-    texts : a list of sentences   
+    texts : a list of sentences
     vocabulary : dict
         From words to indexes of vector.
     embeddings : Matrix containing word representations
     np_func : function (default: np.sum)
-        A numpy matrix operation that can be applied columnwise, 
-        like `np.mean`, `np.sum`, or `np.prod`. 
+        A numpy matrix operation that can be applied columnwise,
+        like `np.mean`, `np.sum`, or `np.prod`.
     Returns
     -------
-    np.array, dimension `(len(texts), embeddings.shape[1])`            
+    np.array, dimension `(len(texts), embeddings.shape[1])`
     """
     representations = np.zeros((len(texts), embeddings.shape[1]))
     count = 0

@@ -12,6 +12,8 @@ contractions = "^0.1.73"
 nltk = "^3.8.1"
 pandas = "^1.5.3"
 scikit-learn = "^1.2.1"
+matplotlib = "^3.7.0"
+category-encoders = "^2.6.0"
 
 [tool.poetry.dev-dependencies]
 

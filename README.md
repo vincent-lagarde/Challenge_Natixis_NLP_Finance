@@ -7,7 +7,7 @@
 1. Clone the repository
 
 ```bash
-git clone https://github.com/baptiste-pasquier/trend-tracker
+git clone https://github.com/thomasflourent/Challenge_NLP_Natixis
 ```
 
 2. Install the project
