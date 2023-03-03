@@ -6,6 +6,8 @@ import pandas as pd
 from nltk.corpus import stopwords, wordnet
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
+from deep_translator import GoogleTranslator
+from langdetect import detect
 
 
 def load_data(dict_path):
@@ -285,3 +287,23 @@ def suppr_footnotes(text):
         pass
 
     return txt
+
+def find_language(series_text_column):
+    """
+        Find the language of all the texts in a pandas Series
+
+        Attributes
+        ----------
+            series_text_column: pd.Series
+                Series containing all the texts
+        
+        Returns
+        -------
+            series_lang: pd.Series
+                Series with the language of the texts
+
+    """
+    return pd.Series([detect(str(txt)) for txt in series_text_column])
+
+def translate_texts():
+    pass
