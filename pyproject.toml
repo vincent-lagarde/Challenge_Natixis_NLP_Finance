@@ -17,6 +17,9 @@ category-encoders = "^2.6.0"
 textblob = "^0.17.1"
 langdetect = "^1.0.9"
 deep-translator = "^1.10.1"
+wordcloud = "^1.8.2.2"
+transformers = "^4.26.1"
+torch = "^1.13.1"
 
 [tool.poetry.dev-dependencies]
 

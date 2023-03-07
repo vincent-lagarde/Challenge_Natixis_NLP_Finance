@@ -6,7 +6,6 @@ import pandas as pd
 from nltk.corpus import stopwords, wordnet
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
-from deep_translator import GoogleTranslator
 from langdetect import detect
 
 
@@ -76,9 +75,6 @@ def text_cleaning(
     # lowercase
     corpus = corpus.lower()
 
-    # remove extra newlines
-    corpus = re.sub(r"[\r|\n|\r\n]+", " ", corpus)
-
     # remove URL
     corpus = re.sub(r"https?://[\S]+", "", corpus)
 
@@ -90,7 +86,7 @@ def text_cleaning(
 
     # remove numbers
     if fg_no_numbers:
-        corpus = re.sub(r" \d+", " ", corpus)
+        corpus = re.sub(r"\d+", "", corpus)
 
     # tokenization
     corpus_words = word_tokenize(corpus)
@@ -110,6 +106,9 @@ def text_cleaning(
         corpus_words = [
             wordnet_lemmatizer.lemmatize(word, tag) for (word, tag) in corpus_pos_tag
         ]
+
+    # remove extra newlines
+    corpus = re.sub(r"[\r|\n|\r\n]+", " ", corpus)
 
     return " ".join(corpus_words)
 
@@ -171,12 +170,19 @@ def link_texts_series(df_train_series, df_text, id_series, id_text):
     # Group By the series and aggregate on specific features (concatenate the text, list of the speakers)
     df_temp = (
         df_temp.groupby(id_series)
-        .agg({"text_process": lambda x: " ".join(x), "speaker": lambda x: list(x)})
+        .agg(
+            {
+                "text_process": lambda x: " ".join(x),
+                "speaker": lambda x: list(x),  # unique or not ?
+                "lang": lambda x: list(x),  # make unique or not ?
+            }
+        )
         .reset_index()
         .rename(
             columns={
                 "text_process": "text_concat_" + suff,
                 "speaker": "list_speakers_" + suff,
+                "lang": "list_languages_" + suff,
             }
         )
     )
@@ -288,22 +294,24 @@ def suppr_footnotes(text):
 
     return txt
 
+
 def find_language(series_text_column):
     """
-        Find the language of all the texts in a pandas Series
+    Find the language of all the texts in a pandas Series
 
-        Attributes
-        ----------
-            series_text_column: pd.Series
-                Series containing all the texts
-        
-        Returns
-        -------
-            series_lang: pd.Series
-                Series with the language of the texts
+    Attributes
+    ----------
+        series_text_column: pd.Series
+            Series containing all the texts
+
+    Returns
+    -------
+        series_lang: pd.Series
+            Series with the language of the texts
 
     """
     return pd.Series([detect(str(txt)) for txt in series_text_column])
+
 
 def translate_texts():
     pass
