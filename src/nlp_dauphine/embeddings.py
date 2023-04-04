@@ -1,4 +1,5 @@
 from collections import Counter, OrderedDict
+from sklearn.neighbors import NearestNeighbors
 from nltk.tokenize import word_tokenize
 import numpy as np
 from tqdm import tqdm
@@ -87,16 +88,6 @@ def co_occurence_matrix(corpus, vocabulary, window=0, distance_weighting=False):
     return M
 
 
-def euclidean(u, v):
-    return np.linalg.norm(u - v)
-
-
-def length_norm(u):
-    return u / np.sqrt(u.dot(u))
-
-
-def cosine(u, v):
-    return 1.0 - length_norm(u).dot(length_norm(v))
 
 
 def sentence_representations(texts, vocabulary, embeddings, np_func=np.mean):
@@ -131,3 +122,12 @@ def sentence_representations(texts, vocabulary, embeddings, np_func=np.mean):
         representations[count] = transform_vec
         count += 1
     return representations
+
+
+def print_neighbors(distance, voc, co_oc, mot, k=10):
+    inv_voc = {id: w for w, id in voc.items()}
+    neigh = NearestNeighbors(n_neighbors=k, algorithm='brute', metric=distance)
+    neigh.fit(co_oc) 
+    dist, ind = neigh.kneighbors([co_oc[voc[mot]]])
+    print("Plus proches voisins de %s selon la distance '%s': " % (mot, distance.__name__))
+    print([[inv_voc[i] for i in s[1:]] for s in ind])
