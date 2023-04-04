@@ -1,8 +1,8 @@
 """NLP Challenge utils."""
 
 import os
-from pathlib import Path
 import numpy as np
+from pathlib import Path
 
 
 def set_working_dir():

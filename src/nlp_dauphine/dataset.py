@@ -8,31 +8,27 @@ from torch.nn.utils.rnn import pad_sequence
 class TextClassificationDataset(Dataset):
     def __init__(
         self,
-        text_ecb,
-        text_fed,
-        time_series,
+        data,
         metadata,
         labels,
         max_length,
         vocab=None,
         min_freq=5,
     ):
-        self.text_ecb = text_ecb
-        self.text_fed = text_fed
-        self.time_series = time_series
-        self.metadata = metadata
+        self.data = data
         # Set the maximum length we will keep for the sequences
         self.max_length = max_length
+
+        # We then need to tokenize the data ..
+        tokenized_data = [word_tokenize(seq) for seq in self.data]
 
         # Allow to import a vocabulary (for valid/test datasets, that will use the training vocabulary)
         if vocab is not None:
             self.word2idx, self.idx2word = vocab
         else:
             # If no vocabulary imported, build it (and reverse)
-            self.word2idx, self.idx2word = self.build_vocab(self.data, min_freq)
-            ##WE MAKE TWICE TOKENIZE THATS ABSURD
-        # We then need to tokenize the data ..
-        tokenized_data = [word_tokenize(seq) for seq in self.data]
+            self.word2idx, self.idx2word = self.build_vocab(tokenized_data, min_freq)
+
         # Transform words into lists of indexes
         indexed_data = [
             list(
@@ -109,7 +105,7 @@ class TextClassificationDataset(Dataset):
 
         return vocabulary, vocabulary_word_counts
 
-    def build_vocab(self, corpus, count_threshold):
+    def build_vocab(self, tokenized_data, count_threshold):
         """
         Same as in the previous TP: we want to output word_index, a dictionary containing words
         and their corresponding indexes as {word : indexes}
@@ -118,8 +114,7 @@ class TextClassificationDataset(Dataset):
         We also choose '0' to represent the padding index, so begin the vocabulary index at 1 !
         """
 
-        # Tokenize our corpus
-        tokenized_data = [word_tokenize(seq) for seq in corpus]
+        # Tokenize/Flatten our corpus
         tokenized_data_flatten = [
             item for sublist in tokenized_data for item in sublist
         ]
