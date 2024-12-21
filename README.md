@@ -1,10 +1,10 @@
 # Challenge Natixis - NLP Finance
 
-This project is part of a challenge aimed at predicting index returns using textual data, specifically central bank speeches. It showcases my ability to apply advanced Natural Language Processing (NLP) techniques to solve real-world financial prediction problems.
+This project was developed as part of a challenge organized by Natixis in partnership with Paris Dauphine University and École Polytechnique. The objective of the challenge was to predict index returns using textual data, specifically central bank speeches, by applying advanced Natural Language Processing (NLP) techniques.
 
 ## Context
 
-Central bank speeches significantly influence financial markets by impacting macroeconomic factors such as interest rates, monetary policy, inflation expectations, and credit. This project demonstrates the application of NLP tools to extract insights from these speeches and predict financial market movements.
+Central bank speeches have a significant impact on financial markets, influencing key macroeconomic factors such as interest rates, monetary policy, inflation expectations, and credit dynamics. This challenge focused on leveraging these speeches to predict financial market movements through the application of NLP methods.
 
 ## My Contributions
 
@@ -57,9 +57,4 @@ This project highlights my ability to:
 - **Libraries**: pandas, scikit-learn, TensorFlow, PyTorch, Transformers (Hugging Face)
 - **Tools**: Jupyter Notebook, Poetry for dependency management
 
-## Contact
 
-Feel free to reach out if you'd like to discuss this project or explore potential collaborations:
-
-- **Email**: [Your Email]
-- **LinkedIn**: [Your LinkedIn Profile]
